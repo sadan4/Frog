@@ -33,6 +33,7 @@ from loguru import logger
 
 from frog.config import tessdata_config
 from frog.services.telemetry import telemetry
+from subprocess import PIPE, run
 
 try:
     from PIL import Image
@@ -83,25 +84,24 @@ class ScreenshotService(GObject.GObject):
 
         If image is not recognized, returns None.
         """
-        telemetry.capture('screenshot capture', {'language': lang})
-        self.portal.take_screenshot(
-            None,
-            Xdp.ScreenshotFlags.INTERACTIVE,
-            self.cancelable,
-            self.take_screenshot_finish,
-            [lang, copy],
-        )
+        # telemetry.capture('screenshot capture', {'language': lang})
+        # self.portal.take_screenshot(
+        #     None,
+        #     Xdp.ScreenshotFlags.INTERACTIVE,
+        #     self.cancelable,
+        #     self.take_screenshot_finish,
+        #     [lang, copy],
+        # )
+        self.take_screenshot_finish(lang, copy)
 
-    def take_screenshot_finish(self, source_object, res: Gio.Task, user_data):
-        if res.had_error():
-            return self.emit("error", _("Can't take a screenshot."))
-
-        lang, copy = user_data
-
-        filename = self.portal.take_screenshot_finish(res)
+    def take_screenshot_finish(self, lang, copy):
+        # return self.emit("error", _("Can't take a screenshot."))
+        res = run(["/bin/sh", "-c", 'fp="$(mktemp).png"; flameshot gui --path $fp &>/dev/null; echo $fp'], capture_output=True, text=True)
+        filename = res.stdout
+        # filename = self.portal.take_screenshot_finish(res)
         # Remove file:// from the path
-        filename = filename[7:]
-        filename = GLib.Uri.unescape_string(filename)
+        # filename = filename[7:]
+        filename = GLib.Uri.unescape_string(filename).strip()
         self.decode_image(lang, filename, copy, True)
 
     def decode_image(self,
