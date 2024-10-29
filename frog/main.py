@@ -220,30 +220,21 @@ class FrogApplication(Adw.Application):
 
     @staticmethod
     def on_decoded(_sender, text: str, copy: bool) -> None:
-        return;
-        icon = GdkPixbuf.Pixbuf.new_from_resource_at_scale(
-            f"{RESOURCE_PREFIX}/icons/com.github.tenderowl.frog.svg",
-            128, 128, True
-        )
+        # icon = GdkPixbuf.Pixbuf.new_from_resource_at_scale(
+        #     f"{RESOURCE_PREFIX}/icons/com.github.tenderowl.frog.svg",
+        #     128, 128, True
+        # )
 
         if not text:
-            notification: Notify.Notification = Notify.Notification.new(
-                summary='Frog',
-                body=_("No text found. Try to grab another region.")
-            )
-            notification.set_icon_from_pixbuf(icon)
-            notification.show()
-
+            # notification: Notify.Notification = Notify.Notification.new(
+            #     summary='Frog',
+            #     body=_("No text found. Try to grab another region.")
+            # )
+            # notification.set_icon_from_pixbuf(icon)
+            # notification.show()
+            pass
         if copy:
             clipboard_service.set(text)
-
-            notification: Notify.Notification = Notify.Notification.new(
-                summary='Frog',
-                body=_("Text extracted. You can paste it with Ctrl+V")
-            )
-            notification.set_icon_from_pixbuf(icon)
-            notification.show()
-
         else:
             logger.debug(f'{text}\n')
 
