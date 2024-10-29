@@ -27,6 +27,7 @@
 # authorization.
 
 from gettext import gettext as _
+from subprocess import run
 
 from gi.repository import Gdk, GObject, Gio
 from loguru import logger
@@ -48,8 +49,10 @@ class ClipboardService(GObject.GObject):
         super().__init__()
 
     def set(self, value: str) -> None:
-        self.clipboard.set(value)
-        telemetry.capture('clipboard set')
+        # self.clipboard.set(value)
+        run(["xsel", "-ib"], input=value, text=True)
+        
+        # telemetry.capture('clipboard set')
 
     def _on_read_texture(self, _sender: GObject.GObject, result: Gio.AsyncResult) -> None:
         try:
