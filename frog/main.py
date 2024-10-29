@@ -220,6 +220,7 @@ class FrogApplication(Adw.Application):
 
     @staticmethod
     def on_decoded(_sender, text: str, copy: bool) -> None:
+        return;
         icon = GdkPixbuf.Pixbuf.new_from_resource_at_scale(
             f"{RESOURCE_PREFIX}/icons/com.github.tenderowl.frog.svg",
             128, 128, True
